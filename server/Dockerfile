@@ -12,7 +12,8 @@ ENV API_HOST="0.0.0.0" \
     API_USER="flask" \
     API_DIR="/usr/src/api" \
     FLASK_ENV="development" \
-    FLASK_APP="api.py"
+    FLASK_APP="api.py" \
+    NLTK_STOPWORDS_PATH="/data/stop_words.pkl"
 
 # Work directory inside container
 WORKDIR ${API_DIR}

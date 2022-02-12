@@ -1,35 +1,16 @@
-from flask import Flask
-from flask import request
-import os
-import pickle
+from flask                      import Flask
+from flask                      import request
+from flask_restful              import Api
+
+from resources.home           import HomePage
+from resources.categorization import Categorization
+
+print('Starting API...')
 
 
-# path variables
+app = Flask(__name__)
 
-MODEL_PATH    = os.environ['MODEL_PATH']
+api = Api(app)
 
-# Carregando a Máquina Preditiva
-pickle_in = open(MODEL_PATH, 'rb')
-
-ml_model = pickle.load(pickle_in)
-
-
-api = Flask(__name__)
-
-@api.route("/hello/<name>", methods=["GET"])
-def hello(name):
-    return { "messagem" : f"Hello, {name}"}
-
-
-@api.route("/bye", methods=["POST"])
-def bye():
-    title = request.json["title"],
-    query = request.json["query"],
-    concatenated_tags = request.json["concatenated_tags"]
-
-    concat = str(title) + " " + str(query) + " " + str(concatenated_tags)
-
-    resut = ml_model.predict([concat])
-
-    return { "categories" : f"{resut}"}
-
+api.add_resource(HomePage, '/home')
+api.add_resource(Categorization, '/v1/categorize')
