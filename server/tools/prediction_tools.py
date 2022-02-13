@@ -13,8 +13,6 @@ class PredictionTools():
 
     def categorize_product(self, product):
 
-        print('dados ppara predição ', product)
-
         predicted_category = self.categorization_model.predict(pd.Series(product))
 
         return predicted_category[0]
