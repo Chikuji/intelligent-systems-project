@@ -4,4 +4,4 @@ class HomePage(Resource):
 
     def get(self):
 
-        return {"msg:": "app is running!"}
+        return {"msg:": "If you're seeing this, it means the app is running!"}
