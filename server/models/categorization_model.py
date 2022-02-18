@@ -14,14 +14,36 @@ class CategorizationModel():
     
 
     def predict(self, product):
+        """
+        Receives a dictionary containing title, query, and/or concatenated_tags about a product
+        and returns its category
+        
+        :param data: a dictionary.
+        
+        :returns: a str with the product's category."""
 
-        conditions = [not product['title'], not product['query'], not product['concatenated_tags']]
+        pred_cols = ['title', 'query', 'concatenated_tags']
+
+        product_keys = product.keys()
+
+        conditions = ['title' not in product_keys, 'query' not in product_keys, 'concatenated_tags' not in product_keys]
+
+        if all(conditions):
+
+            return None
+        
+        conditions = [not product.get('title'), not product.get('query'), not product.get('concatenated_tags')]
         
         # if all columns contains None or empty string, we'll return a None, since we can't predict
         ## Also, in order to don't stop processing the whole data passed, we return this None value
-        if any(conditions):
+        if all(conditions):
 
             return None
+
+        # adding empty string to avoid indexing error
+        for col in pred_cols:
+                if col not in product_keys:
+                    product[col] = ""
 
         # Filling Missing Values
         for key in product.keys():
@@ -39,17 +61,36 @@ class CategorizationModel():
         return product_category
 
 
-    def classificationParser(self):
+    def data_validation(self, data):
+        """
+        Receives a dictionary object and check if the data is in the required format..
+        
+        :param data: a dictionary.
+        
+        :returns: True if the data is in a wrong format and False if it's Ok."""
+        
+        # this is not the best way to do it, since we need a lot of code to track all conditions.
+        ## But for simplicity, decided to do this way
 
-        parser = reqparse.RequestParser()
+        # receiving something other than product
+        if not ('products' in data.keys() and len(data.keys()) == 1):
+            
+            return True
+        
+        # not list
+        if not isinstance(data['products'], list):
+            
+            return True
 
-        parser.add_argument('products',
+        # empty
+        if not data['products']:
 
-            required=True,
+            return True
+        
+        # not dict on product list
+        if not all(isinstance(d, dict) for d in data['products']):
+            
+            return True
+    
 
-            type=dict, action='append',
-
-            help = f"Field 'products' as list of dictionaries is required!!")
-
-
-        return parser
+        return False

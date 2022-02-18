@@ -7,11 +7,23 @@ categorizationModel_ = CategorizationModel()
 
 class Categorization(Resource):
 
-    parser = categorizationModel_.classificationParser()
+
+    def get(self):
+
+        return {"msg": "You've sent a GET request to this endpoint. For making categorization requests, please, send a POST with the right json format or try the request testing endpoint: v1/test-request"}
 
     def post(self):
         
-        products = Categorization.parser.parse_args()
+        # products = Categorization.parser.parse_args()
+        products = request.json
+        print(products)
+
+        if categorizationModel_.data_validation(products):
+            
+            return {"message": {
+                        "products": "Field 'products' as a list of dictionaries is required!!"
+                    }
+                }, 400
 
 
         try:

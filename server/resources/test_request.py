@@ -9,8 +9,6 @@ categorizationModel_ = CategorizationModel()
 
 class TestRequest(Resource):
 
-    parser = categorizationModel_.classificationParser()
-
     def get(self):
 
         with open(JSON_TEST, 'rb') as f:
