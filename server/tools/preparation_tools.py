@@ -11,7 +11,7 @@ class PreparationTools():
 
     def create_text_feature(self, data):
         """
-        Receives dictoinary of text columns, concatenate them, and remove stopwords.
+        Receives dictionary of text columns, concatenate them, and remove stopwords.
         
         :param data: a dictionary.
         :param stop_words_list: a list of stop words.
