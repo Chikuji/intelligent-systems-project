@@ -38,6 +38,9 @@ RUN groupadd -g ${GROUP_ID} ${API_GROUP} \
 # Set non-root user flask to run Flask
 USER ${USER_ID}:${GROUP_ID}
 
+# exporting env to allow flask showing prints in console
+ENV PYTHONUNBUFFERED=1
+
 # Expose Flask to outside the container
 EXPOSE ${API_PORT}
 
