@@ -1,123 +1,48 @@
 # Server
+This folder contains all code from the second part of the project developed in the course _Development of Intelligent Computer Systems_ at IME-USP.
 
-In the second part of this project, we will create an **API** for the
-**categorization model** developed previously.
+The API developed was deployed in the cloud using Heroku, you can access here (bellow you can find more details about the endpoints):
 
-More specifically, you will **develop a server** that should receive data
-related to **products** and return the best **categories** for them using a
-**pretrained model**.
+- https://categorization-api.herokuapp.com/home
+- https://categorization-api.herokuapp.com/v1/categorize
+- https://categorization-api.herokuapp.com/v1/test-request
 
-More info about the data can be found [here][1].
+_note: sometimes it make take a while to load since it was deployed in a free plan, so, the app 'sleeps' if it's not receiving rquests_
 
-## Server API
+## Endpoints:
+1) `/home` (GET): returns a simple json just to check if the app is able of receiving requests;
 
-Your API should be composed of the following components:
+2) `/v1/categorize` (POST): receives a json in the following format and returns the category for each product:
 
-1. **Model Loading** <br>
-   Loads a pretrained model from a specified path available in the environment
-   variable `MODEL_PATH`.
-
-2. **Categorization Endpoint** <br>
-   Exposes a **POST** endpoint `/v1/categorize` that receives a JSON with
-   product data and returns a JSON with their predicted categories.
-
-3. **Input Validation** <br>
-   Returns status `400 (Bad Request)` in case of ill-formatted user input
-   without killing the API.
-
-4. **[BONUS] Contract Testing** <br>
-   Runs automated tests from a file `test_api.py` to validate the API
-   responses according to different inputs.
-
-**NOTE:** To test your API, you must provide a JSON file generated from the
-dataset `test_producs.csv`, containing a valid input for your API
-implementation. This file should be saved in the path available in the
-environment variable `TEST_PRODUCTS_PATH`.
-
-## Implementation
-
-The server API should be implemented using the [Flask Library][2] in a file
-named `api.py`.
-
-Use [Python comments][3] to document **relevant** details about your
-implementation. Remember that good documentation should focus on the **why**
-(e.g., why a specific type of model was chosen), since clean code should be
-enough to understand the **how** (e.g., how you selected a specific type of
-model).
-
-## Input
-
-The expected input for the server should follow the following schema:
 ```json
 {
   "products": [
     {
-      "title": "Lembrancinha"
+      "title": "Lembrancinha",
+      "query": "lembrancinhas",
+      "concatenated_tags":"lembrancinhas"
     },
     {
-      "title": "Carrinho de Bebê"
+      "title": "Carrinho de Bebê",
+      "query": "Carrinho de Bebê",
+      "concatenated_tags":"Carrinho de Bebê"
     }
   ]
 }
 ```
-You **MAY** expect to **receive other fields** besides the title to
-represent the products. Remember, however, to use as key the name of the field
-specified in the [raw data][1].
 
-## Output
+We can send a json request to it by navegating into the `data` folder in the terminal and type the following command:
 
-The expected output from the server should follow the following schema:
-```json
-{
-  "categories": [
-    "Lembrancinha",
-    "Bebê"
-  ]
-}
-```
-You **MUST NOT** send other fields besides the category.
-
-## Infrastructure
-
-In this directory, we provide a **containerized environment** that uses
-[docker][4] and [docker-compose][5] to run the API. This should standardize the
-development environment and avoid compatibility problems.
-
-To install docker and docker-compose, check their official documentation
-[here][4] and [here][5]. Both tools should be instalable at Linux, MacOS and
-Windows.
-
-To execute the API, just run the following command:
 ```bash
-docker-compose up --build
+curl --header "Content-Type: application/json"   --request POST   --data @json_request.json   http://localhost:5000/v1/categorize
 ```
-Then open the link shown in the end.
 
-To install an OS package (Debian-based), add the name of the package in the file
-`packages.txt`. To intall a Python package (Pip-based), add the name and version
-of the package in the file `requirements.txt`.
+This json structure allows the API to receive how many products we need. For sending many products at once, just add the fields. For something like straming, just send how many request you would want with just one product.
 
-## Evaluation
+If you send a field with empty
 
-The evaluation will be based on four criteria:
+2) `/v1/test-request` (GET): used to test if the app is able of making predictions. When this endpoint receives a GET request, it automatically loads [this json file][1] and return the category for all products in the file.
 
-1. **Correctness** <br>
-   If the solution runs without unexpected errors.
 
-2. **Compliance** <br>
-   If the solution respects all specified behaviors, in particular concerning
-   inputs and outputs.
 
-2. **Code Quality** <br>
-   If the solution follows the principles of [clean code][6] and general good
-   practices discussed in class.
-
-3. **Documentation** <br>
-   If the solution documents **relevant** decisions in the right measure.
-
-[1]: ../data/README.md
-[2]: https://flask.palletsprojects.com/en/1.1.x/
-[3]: https://realpython.com/documenting-python-code/
-[4]: https://docs.docker.com/get-docker
-[5]: https://docs.docker.com/compose/install
-[6]: https://gist.github.com/wojteklu/73c6914cc446146b8b533c0988cf8d29
+[1]: https://github.com/Chikuji/intelligent-systems-project/blob/main/server/data/json_request.json
